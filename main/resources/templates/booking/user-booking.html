@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #0078d7;
+            color: white;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .footer a {
+            text-decoration: none;
+            color: #0078d7;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 1px solid #0078d7;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .footer a:hover {
+            background-color: #0078d7;
+            color: white;
+        }
+
+        input[type="text"], select {
+            padding: 8px;
+            width: 100%;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+
+        form {
+            display: inline;
+        }
+    </style>
+
+</head>
+<body>
+<div class="content">
+    <h1>Бронювання</h1>
+    <br>
+
+    <br>
+    <table id="employees-table">
+        <tr>
+            <th>Виліт</th>
+            <th>Призначення</th>
+            <th>Дата відправлення</th>
+            <th>Час відправлення</th>
+            <th>Дата прибуття</th>
+            <th>Час прибуття</th>
+            <th>Авіакомпанія</th>
+            <th>Номер літака</th>
+            <th>Номер місця</th>
+            <th>Ціна</th>
+            <th>Статус</th>
+            <th>Дії</th>
+        </tr>
+        <tr th:each="booking : ${bookings}">
+            <td th:text="${booking.flight.departure}"></td>
+            <td th:text="${booking.flight.arrival}"></td>
+            <td th:text="${booking.flight.dateDeparture}"></td>
+            <td th:text="${booking.flight.timeDeparture}"></td>
+            <td th:text="${booking.flight.dateArrival}"></td>
+            <td th:text="${booking.flight.timeArrival}"></td>
+            <td th:text="${booking.flight.aviaCompany}"></td>
+            <td th:text="${booking.flight.plane.number}"></td>
+            <td th:text="${booking.seat.number}"></td>
+            <td th:text="${booking.price}"></td>
+            <td th:text="${booking.status}"></td>
+
+            <td>
+                <form th:action="@{/bookings/{id}/delete(id=${booking.getId()})}" method="get">
+                    <input type="submit" value="Скасувати">
+                </form>
+            </td>
+        </tr>
+    </table>
+    <div class="footer">
+        <a th:href="@{/users/profile/{id}(id=${user.getId()})}">Назад&#8594;</a>
+    </div>
+</div>
+
+</body>
+</html>

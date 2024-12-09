@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Профіль користувача</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Общие стили */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #6c757d, #007bff);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Лояут в правом верхнем углу */
+    .layout-info {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 1rem;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .layout-info h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .layout-info p {
+      margin: 5px 0;
+    }
+
+    .layout-info span {
+      font-weight: 500;
+      color: #ffc107;
+    }
+
+    /* Приветствие слева в верхнем углу */
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-top: 40px;
+      margin-left: 20px;
+      text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .header {
+      position: absolute;
+      left: 20px;
+      top: 100px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .header a {
+      font-size: 1.2rem;
+      color: #ffffff;
+      background-color: #007bff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .header a:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    /* Форма поиска рейса */
+    .search-form {
+      margin-top: 150px;
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .search-form h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .search-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1.1rem;
+    }
+
+    .search-form input {
+      padding: 10px;
+      width: 250px;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .search-form button {
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .search-form button:hover {
+      background-color: #218838;
+    }
+
+    /* Ссылки для редактирования и просмотра броней */
+    .header a {
+      font-size: 1.2rem;
+      color: #ffffff;
+      background-color: #007bff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .header a:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    /* Выход */
+    a[href="/logout"] {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #dc3545;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      color: white;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+
+    a[href="/logout"]:hover {
+      background-color: #c82333;
+    }
+
+    /* Адаптивность для мобильных устройств */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .layout-info {
+        font-size: 1rem;
+        top: 10px;
+        right: 10px;
+      }
+
+      .header {
+        top: 120px;
+        left: 10px;
+        gap: 10px;
+      }
+
+      .search-form input {
+        width: 100%;
+      }
+
+      .search-form button {
+        width: 100%;
+      }
+    }
+  </style>
+
+
+</head>
+<body>
+
+<div class="layout-info">
+  <h3>Лояут</h3>
+  <p>Ім'я: <span th:text="${user.login}"></span></p>
+  <p>Бали: <span th:text="${user.getLoyalty().points}"></span></p>
+</div>
+
+<h1>Ласкаво просимо, <span th:text="${user.name}"></span>!</h1>
+
+<div class="header">
+  <a th:href="@{/users/{id}/edit(id=${user.id})}">Редагувати</a>
+  <a th:href="@{/users/profile/{id}/bookings(id=${user.id})}">Мої бронювання</a>
+</div>
+
+<div class="search-form">
+  <h2>Пошук рейсу</h2>
+  <form th:action="@{/flights/search}" method="get">
+    <label for="departure">Відправлення</label>
+    <input type="text" id="departure" name="departure" placeholder="Введіть пункт відправлення" required>
+
+    <label for="arrival">Прибуття</label>
+    <input type="text" id="arrival" name="arrival" placeholder="Введіть пункт прибуття" required>
+
+    <button type="submit">Знайти рейс</button>
+  </form>
+</div>
+
+<a href="/logout">Вийти</a>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        table th {
+            background-color: #007bff;
+            color: white;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<h2>Результати пошуку рейсів</h2>
+
+<p>Виліт: <span th:text="${departure}"></span></p>
+<p>Прибуття: <span th:text="${arrival}"></span></p>
+
+<table>
+    <thead>
+    <tr>
+        <th>Номер рейсу</th>
+        <th>Виліт</th>
+        <th>Прибуття</th>
+        <th>Дата відправлення</th>
+        <th>Дата прибуття</th>
+        <th>Ціна економ</th>
+        <th>Ціна бізнес</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="flight : ${flights}">
+        <td th:text="${flight.id}"></td>
+        <td th:text="${flight.departure}"></td>
+        <td th:text="${flight.arrival}"></td>
+        <td th:text="${flight.dateDeparture}"></td>
+        <td th:text="${flight.dateArrival}"></td>
+        <td th:text="${flight.price}"></td>
+        <td th:text="${flight.price * 1.7}"></td>
+        <td>
+            <a th:href="@{/seats/flight/{flightId}(flightId=${flight.id})}" class="btn btn-primary">Переглянути місця</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/users/profile/{id}(id=${userId})}" style="display: inline-block; margin-top: 20px;">Повернутись до профілю</a>
+
+</body>
+
+</html>

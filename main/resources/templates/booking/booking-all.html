@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    /* Общие стили */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .content {
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    /* Поля поиска */
+    div[style="margin-bottom: 20px;"] td {
+      padding: 10px;
+      vertical-align: top;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input[type="text"] {
+      width: 200px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+
+    /* Кнопка */
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    /* Таблица */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f4f4f4;
+      color: #333;
+      font-size: 14px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 600px) {
+      input[type="text"], input[type="submit"] {
+        width: 100%;
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+
+      table th, table td {
+        font-size: 12px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+<div class="content">
+  <h1>Список бронювань</h1>
+
+  <br>
+  <form th:action="@{/users/profile/{id}(id=${userId})}" method="get"
+        th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+    <input type="submit" value="Перейти до профілю">
+  </form>
+
+  <div style="margin-bottom: 20px;">
+    <!-- Поиск по ID рейсу -->
+    <td style="border: #000000; display: inline-block; margin-right: 10px;">
+      <b><label for="search-flight-id">Пошук по ID рейсу</label></b>
+      <input type="text" placeholder="Enter Flight ID" id="search-flight-id" onkeyup="searchByFlightId()">
+    </td>
+
+    <!-- Поиск по ID користувача -->
+    <td style="border: #000000; display: inline-block;">
+      <b><label for="search-user-id">Пошук по ID користувача</label></b>
+      <input type="text" placeholder="Enter User ID" id="search-user-id" onkeyup="searchByUserId()">
+    </td>
+
+    <td style="border: #000000; display: inline-block;">
+      <b><label for="search-plane-number">Пошук по номеру літака</label></b>
+      <input type="text" placeholder="Enter Plane Number" id="search-plane-number" onkeyup="searchByPlaneNumber()">
+    </td>
+  </div>
+
+  <br>
+  <table id="employees-table">
+    <tr>
+      <th>ID</th>
+      <th>ID рейсу</th>
+      <th>ID користувача</th>
+      <th>Email користувача</th>
+      <th>Номер літака</th>
+      <th>Номер місця</th>
+      <th>Статус</th>
+      <th>Дії</th>
+    </tr>
+    <tr th:each="booking : ${bookings}">
+      <td th:text="${booking.id}"></td>
+      <td th:text="${booking.flight.id}"></td>
+      <td th:text="${booking.user.id}"></td>
+      <td th:text="${booking.user.email}"></td>
+      <td th:text="${booking.flight.plane.number}"></td>
+      <td th:text="${booking.seat.number}"></td>
+      <td th:text="${booking.status}"></td>
+
+      <td>
+        <form th:action="@{/bookings/{id}/delete(id=${booking.getId()})}" method="get"
+              th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+          <input type="submit" value="Видалити">
+        </form>
+      </td>
+
+    </tr>
+  </table>
+
+</div>
+<script>
+  // Функция поиска по ID рейсу
+  function searchByFlightId() {
+    var input = document.getElementById('search-flight-id').value.toLowerCase();
+    var table = document.getElementById('employees-table');
+
+    for (var i = 1; i < table.rows.length; i++) {
+      var flightId = table.rows[i].cells[1].innerText.toLowerCase(); // ID рейсу
+      table.rows[i].style.display = flightId.includes(input) || input === "" ? "" : "none";
+    }
+  }
+
+  // Функция поиска по ID користувача
+  function searchByUserId() {
+    var input = document.getElementById('search-user-id').value.toLowerCase();
+    var table = document.getElementById('employees-table');
+
+    for (var i = 1; i < table.rows.length; i++) {
+      var userId = table.rows[i].cells[2].innerText.toLowerCase(); // ID користувача
+      table.rows[i].style.display = userId.includes(input) || input === "" ? "" : "none";
+    }
+  }
+
+  function searchByPlaneNumber() {
+    var input = document.getElementById('search-plane-number').value.toLowerCase();
+    var table = document.getElementById('employees-table');
+
+    for (var i = 1; i < table.rows.length; i++) {
+      var planeNumber = table.rows[i].cells[4].innerText.toLowerCase(); // Номер літака
+      table.rows[i].style.display = planeNumber.includes(input) || input === "" ? "" : "none";
+    }
+  }
+</script>
+</body>
+</html>

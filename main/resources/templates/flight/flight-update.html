@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f9fc;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    input:focus, select:focus {
+      border-color: #007bff;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    input[type="date"], input[type="time"] {
+      padding: 8px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .footer a {
+      color: #007bff;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: #0056b3;
+    }
+
+    label[style="color: red"] {
+      font-size: 14px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    small {
+      color: #dc3545;
+      font-size: 14px;
+    }
+  </style>
+
+</head>
+<body>
+<div class="container">
+  <label style="color: red"><b th:text="${errors}"></b></label>
+  <form th:action="@{/flights/{id}/edit(id=${editedFlight.getId()})}" th:method="post" th:object="${editedFlight}">
+    <label for="input_departure">Виліт</label>
+    <input type="text" name="departure" id="input_departure" th:field="*{departure}" required/>
+
+    <label for="input_arrival">Прибуття</label>
+    <input type="text" name="arrival" id="input_arrival" th:field="*{arrival}" required/>
+
+    <label for="dateDeparture">Дата відправлення</label>
+    <input type="date" id="dateDeparture" name="dateDepart" th:field="*{dateDeparture}" required/>
+
+    <label for="timeDeparture">Час відправлення</label>
+    <input type="time" id="timeDeparture" name="timeDepart" th:field="*{timeDeparture}" required/>
+
+    <label for="dateArrival">Дата прибуття</label>
+    <input type="date" id="dateArrival" name="dateArrivl" th:field="*{dateArrival}" required/>
+
+    <label for="timeArrival">Час прибуття</label>
+    <input type="time" id="timeArrival" name="timeArrivl" th:field="*{timeArrival}" required/>
+
+    <label for="price">Ціна</label>
+    <input type="number" id="price" name="price" th:field="*{price}" required/>
+
+    <label for="input_company">Авіакомпанія</label>
+    <input type="text" name="company" id="input_company" th:field="*{aviaCompany}" required/>
+
+    <label for="plane" style="display:block;">Літак</label>
+    <select id="plane" name="plane" th:field="*{plane}">
+      <option th:each="plane : ${planes}" th:value="${plane.id}" th:text="${plane.number}"></option>
+    </select>
+
+    <div class="footer">
+      <button type="submit">Зберегти</button>
+      <a th:href="@{/flights/all}">Назад&#8594;</a>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Профіль адміністратора</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        p strong {
+            font-weight: 700;
+        }
+
+        .navigation {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .navigation h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #ffc107;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .navigation a {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: #fff;
+            background: #28a745;
+            border-radius: 5px;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navigation a:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        a[href="/logout"] {
+            display: block;
+            margin-top: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+            color: #dc3545;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a[href="/logout"]:hover {
+            color: #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .navigation a {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<h1>Профіль адміністратора</h1>
+<p><strong>Ім'я:</strong> <span th:text="${user.name}">Ім'я користувача</span></p>
+<p><strong>Email:</strong> <span th:text="${user.email}">email@example.com</span></p>
+
+<div class="navigation">
+    <h2>Доступні дії:</h2>
+    <a th:href="@{/users/all}">Усі користувачі</a>
+    <a th:href="@{/flights/all}">Усі рейси</a>
+    <a th:href="@{/planes/all}">Усі літаки</a>
+    <a th:href="@{/bookings/all}">Усі бронювання</a>
+</div>
+
+<a href="/logout">Вийти</a>
+</body>
+</html>

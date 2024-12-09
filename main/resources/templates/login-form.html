@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <title>Login</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+
+    .login-page {
+      margin-top: 50px;
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: 36px;
+      margin-bottom: 20px;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-horizontal {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .form-control {
+      background: rgba(255, 255, 255, 0.7);
+      border: none;
+      height: 45px;
+      padding-left: 15px;
+      color: #333;
+      font-size: 14px;
+      font-weight: 500;
+      transition: box-shadow 0.3s;
+    }
+
+    .form-control:focus {
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      outline: none;
+    }
+
+    .btn-primary {
+      background-color: #6a11cb;
+      border: none;
+      height: 45px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      border-radius: 4px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #2575fc;
+      transform: scale(1.05);
+    }
+
+    .text-danger {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #fff;
+    }
+
+    a {
+      color: #ffc107;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .my-3 {
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+
+    .mt-3 {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="row login-page">
+    <div class="col-md-4 col-md-offset-4 text-center">
+      <h1>Login Page</h1>
+    </div>
+  </div>
+
+  <div class="text-center form-text text-danger" th:if="${param.error}">Invalid username or password.</div>
+  <div class="text-center form-text text-danger" th:if="${param.logout}">You have been logged out.</div>
+
+  <form class="form-horizontal" th:action="@{/login-form}" method="post">
+    <div class="form-group">
+      <div class="col-sm-8 col-sm-offset-2">
+        <input type="text" class="form-control" id="username" name="username" placeholder="Email">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-8 col-sm-offset-2">
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2">
+        <button type="submit" class="btn btn-primary btn-block my-3">Login</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2">
+        <p class="text-center mt-3">Don't have an account? <a th:href="@{/users/create}">Register now!</a></p>
+      </div>
+    </div>
+  </form>
+</div>
+</body>
+</html>

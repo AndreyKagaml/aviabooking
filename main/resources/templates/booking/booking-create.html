@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <label style="color: red"><b th:text="${errors}"></b></label>
+    <form th:action="@{/bookings/create}" th:method="post" th:object="${newBooking}">
+        <label for="input_departure">Departure</label>
+        <!--        <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>-->
+        <input type="text" name="departure" id="input_departure" th:field="*{departure}" required/>
+
+        <label for="input_arrival">Arrival</label>
+        <!--        <span th:if="${#fields.hasErrors('secondName')}" th:errors="*{secondName}"></span>-->
+        <input type="text" name="arrival" id="input_arrival" th:field="*{arrival}" required/>
+
+        <label for="dateDeparture">Date Departure</label>
+        <input type="date" id="dateDeparture" name="dateDepart" th:field="*{dateDeparture}" required/>
+
+        <label for="timeDeparture">Time Departure</label>
+        <input type="time" id="timeDeparture" name="timeDepart" th:field="*{timeDeparture}" required/>
+
+        <label for="dateArrival">Date Arrival</label>
+        <input type="date" id="dateArrival" name="dateArrivl" th:field="*{dateArrival}" required/>
+
+        <label for="timeArrival">Time Arrival</label>
+        <input type="time" id="timeArrival" name="timeArrivl" th:field="*{timeArrival}" required/>
+
+        <label for="input_company">Avia Company</label>
+        <!--        <span th:if="${#fields.hasErrors('secondName')}" th:errors="*{secondName}"></span>-->
+        <input type="text" name="company" id="input_company" th:field="*{aviaCompany}" required/>
+
+        <label for="plane" style="display:block;">Plane</label>
+        <select id="plane" name="plane" th:field="*{plane}">
+            <option th:each="plane : ${planes}" th:value="${plane.id}" th:text="${plane.number}"></option>
+        </select>
+
+        <div class="footer">
+            <button type="submit">Save</button>
+            <a th:href="@{/flights/all}">Back&#8594;</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

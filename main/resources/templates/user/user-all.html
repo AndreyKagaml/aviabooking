@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        /* Общие стили */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-top: 20px;
+            color: #007bff;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        table td {
+            background-color: #f9f9f9;
+        }
+
+        /* Стили для формы поиска */
+        input[type="text"] {
+            padding: 8px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 5px;
+            font-size: 1rem;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .search-container form {
+            display: inline-block;
+        }
+
+        /* Стили для кнопок */
+        input[type="submit"] {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #c82333;
+        }
+
+        /* Респонсивность для мобильных устройств */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            table th, table td {
+                font-size: 0.9rem;
+            }
+
+            input[type="text"] {
+                width: 70%;
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="content">
+    <h1>Users list</h1>
+    <br>
+    <table >
+        <tr>
+            <td >
+
+
+                <br>
+                <form th:action="@{/users/profile/{id}(id=${userId})}" method="get"
+                      th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+                    <input type="submit" value="Go to Profile">
+                </form>
+
+            </td>
+
+
+            <td style="border: #000000">
+                <b><label for="search-text">Пошук по ID користувача</label></b>
+                <input type="text" placeholder="Введіть ID користувача" id="search-text" onkeyup="tableSearch()">
+            </td>
+
+        </tr>
+    </table>
+    <br>
+    <table id="employees-table">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Email</th>
+            <th>Login</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th colspan="2">Actions</th>
+        </tr>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.surname}"></td>
+            <td th:text="${user.email}"></td>
+
+            <td th:text="${user.login}"></td>
+            <td th:text="${user.age}"></td>
+            <td th:text="${user.email}"></td>
+
+            <td>
+                <form th:action="@{/users/{id}/edit(id=${user.getId()})}" method="get"
+                      th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+                    <input type="submit" value="Edit">
+                </form>
+                <button th:unless="${#authorization.expression('hasAuthority(''ADMIN'')')}" disabled>Edit</button>
+            </td>
+
+            <td>
+                <form th:action="@{/users/{id}/delete(id=${user.getId()})}" method="get"
+                      th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+                    <input type="submit" value="Delete">
+                </form>
+                <button th:unless="${#authorization.expression('hasAuthority(''ADMIN'')')}" disabled>Delete</button>
+            </td>
+
+
+        </tr>
+    </table>
+</div>
+
+<script th:inline="javascript">
+
+
+    function tableSearch() {
+        var phrase = document.getElementById('search-text');
+        var table = document.getElementById('employees-table');
+        var regPhrase = new RegExp(phrase.value, 'i');
+        var flag = false;
+        for (var i = 1; i < table.rows.length; i++) {
+            flag = regPhrase.test(table.rows[i].cells[0].innerText);
+            if (flag) {
+                table.rows[i].style.display = "";
+            } else {
+                table.rows[i].style.display = "none";
+            }
+        }
+    }
+
+
+</script>
+</body>
+</html>

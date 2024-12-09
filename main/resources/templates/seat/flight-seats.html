@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вибір місць</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #343a40;
+        }
+
+        .plane-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+        }
+
+        /* Нос самолета */
+        .plane-nose {
+            width: 500px; /* Ширина носа равна ширине салона */
+            height: 100px;
+            background-color: #007bff;
+            border-radius: 50% 50% 0 0;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .cockpit {
+            width: 100px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            margin: 0 auto;
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Основная часть */
+        .plane-seat-map {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            max-width: 500px; /* Ширина салона */
+            position: relative;
+        }
+
+        .seat-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .seat {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            background-color: #f4f4f9;
+            position: relative;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        .seat.available {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .seat.unavailable {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .seat.selected {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Окна самолета */
+        .window {
+            width: 20px;
+            height: 30px;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+
+        .windows-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px auto;
+            width: 500px; /* Ширина соответствует ширине салона */
+        }
+
+        /* Крылья */
+        .wing {
+            width: 200px;
+            height: 50px;
+            background-color: #007bff;
+            position: absolute;
+            top: 50%; /* Центрирование по вертикали */
+            transform: translateY(-50%);
+        }
+
+        .wing.left {
+            left: -210px;
+            border-radius: 0 50px 50px 0;
+        }
+
+        .wing.right {
+            right: -210px;
+            border-radius: 50px 0 0 50px;
+        }
+
+        /* Хвост самолета */
+        .plane-tail {
+            width: 500px; /* Ширина хвоста равна ширине салона */
+            height: 80px;
+            background-color: #007bff;
+            border-radius: 0 0 10px 10px;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .baggage {
+            width: 100px;
+            height: 50px;
+            background-color: white;
+            border-radius: 0 0 10px 10px;
+            margin: 0 auto;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Кнопка "Забронювати" */
+        #bookingButton {
+            display: none;
+            margin: 20px auto;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        #bookingButton:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<h1>Вибір місць</h1>
+
+<div class="plane-container">
+    <!-- Нос самолета -->
+    <div class="plane-nose">
+        <div class="cockpit"></div>
+    </div>
+
+    <!-- Окна перед схемой мест -->
+    <div class="windows-row">
+        <div class="window"></div>
+        <div class="window"></div>
+        <div class="window"></div>
+        <div class="window"></div>
+        <div class="window"></div>
+    </div>
+
+    <!-- Схема мест -->
+    <div class="plane-seat-map" id="seatMap">
+        <div class="wing left"></div>
+        <div class="wing right"></div>
+        <!-- Здесь будет схема мест -->
+    </div>
+
+    <!-- Окна после схемы мест -->
+    <div class="windows-row">
+        <div class="window"></div>
+        <div class="window"></div>
+        <div class="window"></div>
+        <div class="window"></div>
+        <div class="window"></div>
+    </div>
+
+    <!-- Хвост самолета -->
+    <div class="plane-tail">
+        <div class="baggage"></div>
+    </div>
+</div>
+
+
+<script th:inline="javascript">
+    // Передаем JSON-данные из Thymeleaf в JavaScript
+    const seatRowsJson = [[${seatRowsJson}]].replace(/'/g, '"');
+    const userId = [[${user.id}]]; // Thymeleaf вставляет текущего пользователя
+    const flightId = [[${flight.id}]]; // ID текущего рейса
+    window.onload = function () {
+        try {
+            const seatRows = JSON.parse(seatRowsJson); // Parse the JSON data passed from the template
+            initSeatMap(seatRows); // Initialize the seat map
+        } catch (error) {
+            console.error("Failed to parse seat rows JSON:", error);
+        }
+    };
+
+
+
+    let selectedSeat = null; // Храним выбранное место
+
+    // Функция инициализации карты мест
+    function initSeatMap(seatRows) {
+        const seatMapContainer = document.getElementById("seatMap");
+
+        seatMapContainer.innerHTML = "";
+
+        seatRows.forEach(row => {
+            const rowDiv = document.createElement("div");
+            rowDiv.classList.add("seat-row", row.class); // Добавляем класс (economy, business)
+
+            row.seats.forEach((seat, index) => {
+                if (index === 3) {
+                    const aisle = document.createElement("div");
+                    aisle.classList.add("aisle");
+                    rowDiv.appendChild(aisle);
+                }
+
+                const seatDiv = document.createElement("div");
+                seatDiv.classList.add("seat");
+                seatDiv.innerText = seat.number;
+                seatDiv.classList.add(seat.book ? "unavailable" : "available");
+
+                // Обработчик клика по месту
+                if (!seat.book) {
+                    seatDiv.onclick = function () {
+                        seatDiv.classList.toggle("selected");
+                        if (seatDiv.classList.contains("selected")) {
+                            selectedSeat = seat; // Сохраняем выбранное место
+                            showBookingButton(); // Показываем кнопку забронировать
+                        } else {
+                            selectedSeat = null; // Убираем выбор
+                            hideBookingButton(); // Прячем кнопку забронировать
+                        }
+                    };
+                }
+
+                rowDiv.appendChild(seatDiv);
+            });
+
+            const divider = document.createElement("div");
+            divider.classList.add("row-divider");
+            rowDiv.appendChild(divider);
+
+            seatMapContainer.appendChild(rowDiv);
+        });
+    }
+
+    // Функция отображения кнопки "Забронировать"
+    function showBookingButton() {
+        const bookingButton = document.getElementById("bookingButton");
+        bookingButton.style.display = "block"; // Показываем кнопку
+    }
+
+    // Функция скрытия кнопки "Забронировать"
+    function hideBookingButton() {
+        const bookingButton = document.getElementById("bookingButton");
+        bookingButton.style.display = "none"; // Скрываем кнопку
+    }
+
+    // Обработчик для бронирования места
+    async function bookSeat() {
+        if (!selectedSeat) return;
+
+        // const userId = 4; // Замените на реальный ID пользователя
+        // const flightId = 1; // Замените на реальный ID рейса
+        const seatId = selectedSeat.id;
+
+        try {
+            const response = await fetch('/bookings/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    seatId: seatId,
+                    userId: userId,
+                    flightId: flightId,
+                }),
+            });
+
+            if (response.ok) {
+              //  alert("Место успешно забронировано!");
+                window.location.href = `/users/profile/${userId}/bookings`; // Перенаправляем на страницу бронирований
+            } else {
+                // const errorText = await response.text();
+                // console.error("Ошибка сервера:", errorText);
+                // alert("Ошибка при бронировании.");
+            }
+        } catch (error) {
+            console.error("Ошибка сети:", error);
+            alert("Не удалось отправить запрос.");
+        }
+    }
+</script>
+
+<!-- Кнопка для бронирования -->
+<button id="bookingButton" style="display: none;" onclick="bookSeat()">Забронювати</button>
+
+
+</body>
+</html>
